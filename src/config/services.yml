@@ -3,11 +3,15 @@ services:
     class: 'Symfony\Component\Console\Application'
     arguments: ['TargetPHProcess', '0.1-dev']
 
-  app.bll.auth_generator:
-    class: 'TargetPHProcess\BLL\Auth\AuthGenerator'
-
-  app.command.hello_world:
-    class: 'TargetPHProcess\Command\HelloWorldCommand'
+  app.command.init:
+    class: 'TargetPHProcess\Command\Configuration\InitCommand'
     tags:
       -  { name: console.command }
     autowire: true
+
+  app.command.auth_configuration:
+    class: 'TargetPHProcess\Command\Configuration\AuthConfigurationCommand'
+    tags:
+      -  { name: console.command }
+    autowire: true
+
