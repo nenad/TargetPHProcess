@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+
+
+use TargetPHProcess\Command;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+
+require __DIR__ . "/../bootstrap.php";
+
+$container = new ContainerBuilder();
+
+$loader = new YamlFileLoader($container, new FileLocator(APP_ROOT . '/src/config'));
+$loader->load('services.yml');
+$container->compile();
+
+/** @var \Symfony\Component\Console\Application $app */
+$app = $container->get('app');
+load_commands_to_app($app, $container);
+$app->run();

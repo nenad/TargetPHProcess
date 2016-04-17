@@ -1,0 +1,29 @@
+{
+    "name": "nenadstojanovikj/targetphprocess",
+    "description": "PHP CLI Application to interact with TargetProcess",
+    "type": "Application",
+    "autoload":
+    {
+        "psr-4":
+        {
+            "TargetPHProcess\\": "src/TargetPHProcess"
+        }
+    },
+    "require": {
+        "symfony/console": "^3.0",
+        "symfony/dependency-injection": "^3.0",
+        "symfony/yaml": "^3.0",
+        "symfony/config": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.3",
+        "mockery/mockery": "^0.9.4"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nenad Stojanovikj",
+            "email": "nekk1@live.com"
+        }
+    ]
+}
