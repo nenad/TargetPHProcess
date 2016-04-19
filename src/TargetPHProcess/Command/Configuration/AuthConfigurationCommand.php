@@ -27,6 +27,6 @@ class AuthConfigurationCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        echo getcwd();
+        print_r($_SERVER);
     }
 }
