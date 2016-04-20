@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use TargetPHProcess\BLL\Auth\AuthGenerator;
-use TargetPHProcess\BLL\TargetProcess\Projects\Project;
+use TargetPHProcess\Models\Project;
 use TargetPHProcess\SystemConfiguration\ConfigurationWriter;
 use TargetPHProcess\SystemConfiguration\ProjectConfiguration;
 

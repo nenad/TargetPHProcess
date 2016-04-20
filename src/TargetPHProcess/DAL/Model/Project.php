@@ -1,18 +1,9 @@
 <?php
 
+namespace TargetPHProcess\DAL\Model;
 
-namespace TargetPHProcess\BLL\TargetProcess\Projects;
-
-
-use TargetPHProcess\BLL\TargetProcess\AbstractTargetProcess;
-
-class Project extends AbstractTargetProcess
+class Project extends AbstractTargetProcessModel
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function getAllProjects()
     {
         $p1 = new \TargetPHProcess\Models\Project();
