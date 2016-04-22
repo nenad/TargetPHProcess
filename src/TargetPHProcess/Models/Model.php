@@ -3,11 +3,8 @@
 
 namespace TargetPHProcess\Models;
 
-/**
- * @property int id
- */
-
 abstract class Model
 {
-
+    /** @var int */
+    public $Id;
 }
