@@ -4,6 +4,7 @@
 namespace TargetPHProcess\DAL\Model;
 
 
+use anlutro\cURL\cURL;
 use TargetPHProcess\BLL\Configuration\Configuration;
 use TargetPHProcess\Exceptions\NoModelSetException;
 use TargetPHProcess\SystemConfiguration\ProjectConfiguration;
@@ -26,13 +27,18 @@ abstract class AbstractTargetProcessModel
     protected $skip;
     /** @var string */
     protected $data;
+    /** @var int */
+    protected $id;
 
     /** @var ProjectConfiguration */
     protected $configuration;
+    /* @var cURL */
+    private $curl;
 
-    public function __construct()
+    public function __construct(cURL $curl)
     {
         $this->configuration = Configuration::getInstance()->getProjectConfiguration();
+        $this->curl = $curl;
     }
 
     public function hasConfiguration()
@@ -68,6 +74,12 @@ abstract class AbstractTargetProcessModel
         return $this;
     }
 
+    public function id($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
     public function format($format)
     {
         $this->format = $format;
@@ -93,12 +105,17 @@ abstract class AbstractTargetProcessModel
 
     public function get()
     {
-
+        $url = $this->constructQuery();
+        $response = $this->curl->get($url);
+        return $response;
     }
 
     public function post()
     {
-
+        $url = $this->constructQuery();
+        $data = $this->data;
+        $response = $this->curl->post($url, $data);
+        return $response;
     }
 
     private function constructQuery()
@@ -107,8 +124,15 @@ abstract class AbstractTargetProcessModel
             throw new NoModelSetException();
         }
 
-        $url = $this->configuration->tp_url . '/api/v1/' . $this->model . '?';
-        $url .= "format={$this->format}";
+        $url = "{$this->configuration->tp_url}/api/v1/{$this->model}";
+       
+        # Add ID
+        if (!empty($this->id)) {
+            $url .= "/{$this->id}";
+        }
+
+        # Add format
+        $url .= "?format={$this->format}";
 
         if (!empty($this->includeAttributes)) {
             $url .= "&include={$this->includeAttributes}";
@@ -124,4 +148,6 @@ abstract class AbstractTargetProcessModel
         }
         return $url;
     }
+
+    public abstract function find($id);
 }
