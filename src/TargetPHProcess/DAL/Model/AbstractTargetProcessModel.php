@@ -6,6 +6,7 @@ namespace TargetPHProcess\DAL\Model;
 
 use anlutro\cURL\cURL;
 use anlutro\cURL\Request;
+use Boris\Config;
 use JsonMapper;
 use TargetPHProcess\BLL\Configuration\Configuration;
 use TargetPHProcess\Exceptions\NoModelSetException;
@@ -37,6 +38,94 @@ abstract class AbstractTargetProcessModel
     /** @var array */
     protected $data = [];
 
+    /**
+     * @return string
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * @return array
+     */
+    public function getIncludeAttributes()
+    {
+        return $this->includeAttributes;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExcludeAttributes()
+    {
+        return $this->excludeAttributes;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormat()
+    {
+        return $this->format;
+    }
+
+    /**
+     * @return Model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModelEntity()
+    {
+        return $this->modelEntity;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTake()
+    {
+        return $this->take;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSkip()
+    {
+        return $this->skip;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPostData()
+    {
+        return $this->postData;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
     /** @var ProjectConfiguration */
     protected $configuration;
     /* @var cURL */
@@ -46,9 +135,9 @@ abstract class AbstractTargetProcessModel
      */
     protected $mapper;
 
-    public function __construct(cURL $curl, JsonMapper $mapper)
+    public function __construct(Configuration $configuration, cURL $curl, JsonMapper $mapper)
     {
-        $this->configuration = Configuration::getInstance()->getProjectConfiguration();
+        $this->configuration = $configuration->getProjectConfiguration();
         $this->curl = $curl;
         $this->mapper = $mapper;
     }
