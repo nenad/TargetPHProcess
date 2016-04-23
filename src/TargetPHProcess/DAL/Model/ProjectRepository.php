@@ -13,13 +13,4 @@ class ProjectRepository extends AbstractTargetProcessModel
     {
         return $this->includeAll()->get();
     }
-
-    /**
-     * @param $id
-     * @return Project
-     */
-    public function find($id)
-    {
-        return $this->setId($id)->includeAll()->get();
-    }
 }

@@ -200,7 +200,15 @@ abstract class AbstractTargetProcessModel
         return $url;
     }
 
-    public abstract function find($id);
+    public function find($id)
+    {
+        return $this->setId($id)->includeAll()->get();
+    }
+
+    public function all($skip = 0, $take = 100)
+    {
+        return $this->setSkip($skip)->setTake($take)->get();
+    }
 
     public function getMappedObject($json)
     {

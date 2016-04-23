@@ -17,10 +17,4 @@ class Project extends Model
     public $Owner;
     /** @var EntityState */
     public $EntityState;
-    
-    
-    public function __toString()
-    {
-        return $this->Name;
-    }
 }
