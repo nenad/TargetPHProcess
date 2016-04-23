@@ -1,13 +1,12 @@
 #!/usr/bin/env php
 <?php
 
-use TargetPHProcess\BLL\Console\TPDefinition;
-use TargetPHProcess\Command;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-require __DIR__ . "/../bootstrap.php";
+require_once 'bootstrap.php';
+require_once 'vendor/d11wtq/boris/lib/autoload.php';
 
 $container = new ContainerBuilder();
 
@@ -17,6 +16,6 @@ $container->compile();
 
 /** @var \Symfony\Component\Console\Application $app */
 $app = $container->get('app');
-load_commands_to_app($app, $container);
-$app->setDefinition(new TPDefinition());
-$app->run();
+$boris = new \Boris\Boris('tp> ');
+$boris->setLocal(['app' => $app, 'container' => $container]);
+$boris->start();

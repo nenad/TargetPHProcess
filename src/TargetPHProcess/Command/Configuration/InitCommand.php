@@ -11,6 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use TargetPHProcess\BLL\Auth\AuthGenerator;
+use TargetPHProcess\DAL\Model\ProjectRepository;
 use TargetPHProcess\Models\Project;
 use TargetPHProcess\SystemConfiguration\ConfigurationWriter;
 use TargetPHProcess\SystemConfiguration\ProjectConfiguration;
@@ -24,7 +25,7 @@ class InitCommand extends Command
     /** @var Project */
     private $project;
 
-    public function __construct(ConfigurationWriter $writer, AuthGenerator $authGenerator, Project $project)
+    public function __construct(ConfigurationWriter $writer, AuthGenerator $authGenerator, ProjectRepository $project)
     {
         parent::__construct('init');
         $this->configWriter = $writer;

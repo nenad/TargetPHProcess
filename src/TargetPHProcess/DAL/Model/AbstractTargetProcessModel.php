@@ -5,40 +5,51 @@ namespace TargetPHProcess\DAL\Model;
 
 
 use anlutro\cURL\cURL;
+use JsonMapper;
 use TargetPHProcess\BLL\Configuration\Configuration;
 use TargetPHProcess\Exceptions\NoModelSetException;
+use TargetPHProcess\Models\Model;
 use TargetPHProcess\SystemConfiguration\ProjectConfiguration;
 
 abstract class AbstractTargetProcessModel
 {
     /** @var string */
     protected $query;
-    /** @var string */
+    /** @var array */
     protected $includeAttributes;
-    /** @var string */
+    /** @var array */
     protected $excludeAttributes;
     /** @var string */
     protected $format = 'json';
-    /** @var string */
+    /** @var Model */
     protected $model = null;
+    /** @var string */
+    protected $modelEntity = null;
     /** @var int */
     protected $take;
     /** @var int */
     protected $skip;
     /** @var string */
-    protected $data;
+    protected $postData;
     /** @var int */
     protected $id;
+    /** @var array */
+    protected $data = [];
 
     /** @var ProjectConfiguration */
     protected $configuration;
     /* @var cURL */
     private $curl;
+    /**
+     * @var JsonMapper
+     */
+    protected $mapper;
 
-    public function __construct(cURL $curl)
+    public function __construct(cURL $curl, JsonMapper $mapper)
     {
         $this->configuration = Configuration::getInstance()->getProjectConfiguration();
         $this->curl = $curl;
+        $this->mapper = $mapper;
     }
 
     public function hasConfiguration()
@@ -58,96 +69,167 @@ abstract class AbstractTargetProcessModel
 
     public function query($query)
     {
+        $this->data['query'] = $query;
         $this->query = $query;
         return $this;
     }
 
-    public function includeAttributes($attributes)
+    public function includeAll()
+    {
+        $modelAttributes = array_keys(get_class_vars($this->model));
+        $this->setIncludeAttributes($modelAttributes);
+        return $this;
+    }
+
+    public function addIncludeAttributes(array $attributes)
+    {
+        $this->includeAttributes = array_unique(array_merge($this->includeAttributes, $attributes));
+        $this->data['include'] = $this->wrapInBrackets($attributes);
+        return $this;
+    }
+
+    public function addExcludeAttributes(array $attributes)
+    {
+        $this->excludeAttributes = array_unique(array_merge($this->excludeAttributes, $attributes));
+        $this->data['exclude'] = $this->wrapInBrackets($attributes);
+        return $this;
+    }
+
+    public function setIncludeAttributes(array $attributes)
     {
         $this->includeAttributes = $attributes;
+        $this->data['include'] = $this->wrapInBrackets($attributes);
         return $this;
     }
 
-    public function excludeAttributes($attributes)
+    public function setExcludeAttributes(array $attributes)
     {
         $this->excludeAttributes = $attributes;
+        $this->data['exclude'] = $this->wrapInBrackets($attributes);
         return $this;
     }
 
-    public function id($id)
+    public function setId($id)
     {
         $this->id = $id;
         return $this;
     }
 
-    public function format($format)
+    public function setFormat($format)
     {
+        $this->data['format'] = $format;
         $this->format = $format;
         return $this;
     }
 
-    public function skip($value)
+    public function setSkip($value)
     {
+        $this->data['skip'] = $value;
         $this->skip = $value;
         return $this;
     }
 
-    public function take($value)
+    public function setTake($value)
     {
+        $this->data['take'] = $value;
         $this->take = $value;
         return $this;
     }
 
-    public function postData($data)
+    public function setPostData($data)
     {
-        $this->data = $data;
+        $this->postData = $data;
     }
 
     public function get()
     {
+        $this->setFormat('json');
         $url = $this->constructQuery();
-        $response = $this->curl->get($url);
-        return $response;
+        $url = $this->curl->buildUrl($url, $this->data);
+        $request = $this->curl->newRequest('GET', $url);
+        $request->setHeader('Authorization', "Basic {$this->configuration->auth}");
+        $response = $request->send();
+        $json = $response->body;
+        $mappedObject = $this->getMappedObject($json);
+
+        if (is_array($mappedObject)) {
+            return $this->mapper->mapArray($mappedObject, [], new $this->model);
+        }
+
+        return $this->mapper->map($mappedObject, new $this->model);
     }
 
     public function post()
     {
         $url = $this->constructQuery();
-        $data = $this->data;
+        $data = $this->postData;
         $response = $this->curl->post($url, $data);
         return $response;
     }
 
     private function constructQuery()
     {
-        if (empty($this->model)) {
+        if (empty($this->modelEntity)) {
             throw new NoModelSetException();
         }
 
-        $url = "{$this->configuration->tp_url}/api/v1/{$this->model}";
-       
+        $url = "{$this->configuration->tp_url}/api/v1/{$this->modelEntity}";
+
         # Add ID
         if (!empty($this->id)) {
             $url .= "/{$this->id}";
         }
 
-        # Add format
-        $url .= "?format={$this->format}";
-
-        if (!empty($this->includeAttributes)) {
-            $url .= "&include={$this->includeAttributes}";
-        }
-        if (!empty($this->excludeAttributes)) {
-            $url .= "&exclude={$this->excludeAttributes}";
-        }
-        if (!empty($this->take)) {
-            $url .= "&take={$this->take}";
-        }
-        if (!empty($this->skip)) {
-            $url .= "&skip={$this->skip}";
-        }
+        /**
+         * # Add format
+         * $url .= "?format={$this->format}";
+         *
+         * if (!empty($this->includeAttributes)) {
+         * $url .= "&include={$this->includeAttributes}";
+         * }
+         * if (!empty($this->excludeAttributes)) {
+         * $url .= "&exclude={$this->excludeAttributes}";
+         * }
+         * if (!empty($this->take)) {
+         * $url .= "&take={$this->take}";
+         * }
+         * if (!empty($this->skip)) {
+         * $url .= "&skip={$this->skip}";
+         * }
+         */
         return $url;
     }
 
     public abstract function find($id);
+
+    public function getMappedObject($json)
+    {
+        $jsonArray = json_decode($json, true);
+        $normalizedArray = [];
+        if (key_exists('Items', $jsonArray)) {
+            return json_decode(json_encode($jsonArray['Items']));
+        }
+        foreach ($jsonArray as $key => $value) {
+            if (is_array($value) and key_exists('Items', $value)) {
+                $normalizedArray[$key] = $value['Items'];
+            } else {
+                $normalizedArray[$key] = $value;
+            }
+        }
+        return json_decode(json_encode($normalizedArray));
+    }
+
+    public function wrapInBrackets(array $attributes)
+    {
+        $stringArray = '[';
+        foreach ($attributes as $key => $attribute) {
+            if (is_array($attribute)) {
+                return $stringArray . $key . $this->wrapInBrackets($attribute);
+            } else {
+                $stringArray .= "{$attribute},";
+            }
+        }
+        $stringArray = substr($stringArray, 0, -1);
+        return $stringArray . ']';
+    }
 }

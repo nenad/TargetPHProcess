@@ -15,3 +15,6 @@ services:
       -  { name: console.command }
     autowire: true
 
+  app.repositories.project:
+    class: 'TargetPHProcess\DAL\Model\ProjectRepository'
+    autowire: true

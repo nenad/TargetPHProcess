@@ -6,19 +6,20 @@ use TargetPHProcess\Models\Project;
 
 class ProjectRepository extends AbstractTargetProcessModel
 {
-    protected $model = 'Projects';
+    protected $model = Project::class;
+    protected $modelEntity = 'Projects';
 
     public function getAllProjects()
     {
-        $p1 = new Project();
-        $p1->Name = 'hello';
-        $p2 = new Project();
-        $p2->Name = 'world';
-        return [$p1, $p2];
+        return $this->includeAll()->get();
     }
 
+    /**
+     * @param $id
+     * @return Project
+     */
     public function find($id)
     {
-
+        return $this->setId($id)->includeAll()->get();
     }
 }

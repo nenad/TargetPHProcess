@@ -7,7 +7,7 @@ class Project extends Model
 {
     /** @var string */
     public $Name;
-    /** @var string */
+    /** @var string|null */
     public $Description;
     /** @var string */
     public $ResourceType;
