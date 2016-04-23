@@ -18,3 +18,9 @@ services:
   app.repositories.project:
     class: 'TargetPHProcess\DAL\Model\ProjectRepository'
     autowire: true
+  app.repositories.time:
+    class: 'TargetPHProcess\DAL\Model\TimeRepository'
+    autowire: true
+  app.repositories.userstory:
+    class: 'TargetPHProcess\DAL\Model\UserStoryRepository'
+    autowire: true

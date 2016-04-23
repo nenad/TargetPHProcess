@@ -4,7 +4,7 @@
 namespace TargetPHProcess\Models;
 
 
-class Assignable
+class Assignable extends Model
 {
     /** @var string */
     public $ResourceType;

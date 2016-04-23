@@ -12,7 +12,7 @@ class Time extends Model
     public $Spent;
     /** @var float */
     public $Remain;
-    /** @var bool */
+    /** @var bool|null */
     public $IsEstimation;
     /** @var TPDate */
     public $Date;
@@ -22,23 +22,23 @@ class Time extends Model
     public $Project;
     /** @var Assignable */
     public $Assignable;
-    /** @var UserStory */
+    /** @var UserStory|null */
     public $UserStory;
-    /** @var Bug */
+    /** @var Bug|null */
     public $Bug;
-    /** @var Task */
+    /** @var Task|null */
     public $Task;
-    /** @var Request */
+    /** @var Request|null */
     public $Request;
-    /** @var TestPlan */
+    /** @var TestPlan|null */
     public $TestPlan;
-    /** @var TestPlanRun */
+    /** @var TestPlanRun|null */
     public $TestPlanRun;
-    /** @var string */
+    /** @var string|null */
     public $CustomActivity;
     /** @var User */
     public $User;
-    /** @var Role */
+    /** @var Role|null */
     public $Role;
     /** @var CustomField[] */
     public $CustomFields;

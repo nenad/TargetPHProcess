@@ -5,6 +5,7 @@ namespace TargetPHProcess\DAL\Model;
 
 
 use anlutro\cURL\cURL;
+use anlutro\cURL\Request;
 use JsonMapper;
 use TargetPHProcess\BLL\Configuration\Configuration;
 use TargetPHProcess\Exceptions\NoModelSetException;
@@ -139,6 +140,7 @@ abstract class AbstractTargetProcessModel
     public function setPostData($data)
     {
         $this->postData = $data;
+        return $this;
     }
 
     public function get()
@@ -161,10 +163,16 @@ abstract class AbstractTargetProcessModel
 
     public function post()
     {
+        $this->setFormat('json');
         $url = $this->constructQuery();
+        $url = $this->curl->buildUrl($url, $this->data);
         $data = $this->postData;
-        $response = $this->curl->post($url, $data);
-        return $response;
+        $request = $this->curl->newRequest('POST', $url, $data, Request::ENCODING_RAW);
+        $request->setHeader('Authorization', "Basic {$this->configuration->auth}");
+        $request->setHeader('Content-Type', 'application/json');
+        $response = $request->send();
+        $mappedObject = $this->getMappedObject($response->body);
+        return $this->mapper->map($mappedObject, new $this->model);
     }
 
     private function constructQuery()
@@ -175,28 +183,9 @@ abstract class AbstractTargetProcessModel
 
         $url = "{$this->configuration->tp_url}/api/v1/{$this->modelEntity}";
 
-        # Add ID
         if (!empty($this->id)) {
             $url .= "/{$this->id}";
         }
-
-        /**
-         * # Add format
-         * $url .= "?format={$this->format}";
-         *
-         * if (!empty($this->includeAttributes)) {
-         * $url .= "&include={$this->includeAttributes}";
-         * }
-         * if (!empty($this->excludeAttributes)) {
-         * $url .= "&exclude={$this->excludeAttributes}";
-         * }
-         * if (!empty($this->take)) {
-         * $url .= "&take={$this->take}";
-         * }
-         * if (!empty($this->skip)) {
-         * $url .= "&skip={$this->skip}";
-         * }
-         */
         return $url;
     }
 
