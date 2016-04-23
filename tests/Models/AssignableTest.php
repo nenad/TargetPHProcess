@@ -25,7 +25,7 @@ class AssignableTest extends PHPUnit_Framework_TestCase
         $assignable->Name = 'AssignableName';
         $assignable->Project = $project;
 
-        $actualData = json_encode($assignable->getJsonData());
+        $actualData = json_encode($assignable->getTPObject());
 
         $expectedData = '{"Name":"AssignableName","Project":{"Name":"ProjectName","Description":"ProjectDescription","EntityState":{"Name":"In Progress","Id":2},"Id":1},"Id":3}';
         $this->assertJson($actualData);
