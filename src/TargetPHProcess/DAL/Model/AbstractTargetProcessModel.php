@@ -6,9 +6,9 @@ namespace TargetPHProcess\DAL\Model;
 
 use anlutro\cURL\cURL;
 use anlutro\cURL\Request;
-use Boris\Config;
 use JsonMapper;
 use TargetPHProcess\BLL\Configuration\Configuration;
+use TargetPHProcess\Exceptions\BadResponseException;
 use TargetPHProcess\Exceptions\NoModelSetException;
 use TargetPHProcess\Models\Model;
 use TargetPHProcess\SystemConfiguration\ProjectConfiguration;
@@ -232,6 +232,11 @@ abstract class AbstractTargetProcessModel
         return $this;
     }
 
+    /**
+     * @return array|object
+     * @throws NoModelSetException
+     * @throws \JsonMapper_Exception
+     */
     public function get()
     {
         $this->setFormat('json');
@@ -241,13 +246,18 @@ abstract class AbstractTargetProcessModel
         $request->setHeader('Authorization', "Basic {$this->configuration->auth}");
         $response = $request->send();
         $json = $response->body;
+
+        if ($response->statusCode >= 400) {
+            throw new BadResponseException($response);
+        }
+
         $mappedObject = $this->getMappedObject($json);
 
         if (is_array($mappedObject)) {
-            return $this->mapper->mapArray($mappedObject, [], new $this->model);
+            return @$this->mapper->mapArray($mappedObject, [], new $this->model);
         }
 
-        return $this->mapper->map($mappedObject, new $this->model);
+        return @$this->mapper->map($mappedObject, new $this->model);
     }
 
     public function post()
@@ -260,8 +270,11 @@ abstract class AbstractTargetProcessModel
         $request->setHeader('Authorization', "Basic {$this->configuration->auth}");
         $request->setHeader('Content-Type', 'application/json');
         $response = $request->send();
+        if ($response->statusCode >= 400) {
+            throw new BadResponseException($response);
+        }
         $mappedObject = $this->getMappedObject($response->body);
-        return $this->mapper->map($mappedObject, new $this->model);
+        return @$this->mapper->map($mappedObject, new $this->model);
     }
 
     private function constructQuery()

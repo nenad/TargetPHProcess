@@ -19,7 +19,7 @@ class ConfigurationWriter
             file_put_contents($this->configPath, '[]');
         }
     }
-    
+
     public function writeConfig($json)
     {
         file_put_contents($this->configPath, $json, FILE_TEXT);

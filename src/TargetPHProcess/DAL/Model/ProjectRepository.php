@@ -13,4 +13,13 @@ class ProjectRepository extends AbstractTargetProcessModel
     {
         return $this->includeAll()->get();
     }
+
+    public function getAllProjectNames()
+    {
+        $projects = $this->getAllProjects();
+        $names = array_map(function (Project $project) {
+            return "$project->Name ($project->Id)";
+        }, $projects);
+        return $names;
+    }
 }
