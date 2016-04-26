@@ -8,7 +8,7 @@ abstract class Model
     /** @var int */
     public $Id;
 
-    public function getJsonData()
+    public function getTPObject()
     {
         $data = get_object_vars($this);
         $arrayData = [];
@@ -16,7 +16,7 @@ abstract class Model
             if ($value != null) {
                 if (is_a($value, Model::class)) {
                     /** @var $value Model */
-                    $arrayData[$key] = (object)$value->getJsonData();
+                    $arrayData[$key] = (object)$value->getTPObject();
                 } else {
                     $arrayData[$key] = $value;
                 }

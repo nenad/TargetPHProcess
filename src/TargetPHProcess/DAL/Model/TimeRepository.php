@@ -13,7 +13,7 @@ class TimeRepository extends AbstractTargetProcessModel
 
     public function create(Time $time)
     {
-        $data = json_encode($time->getJsonData());
+        $data = json_encode($time->getTPObject());
         $time = $this->setPostData($data)->post();
         return $time;
     }
