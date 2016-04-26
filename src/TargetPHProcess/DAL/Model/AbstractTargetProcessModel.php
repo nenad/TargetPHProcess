@@ -85,28 +85,28 @@ abstract class AbstractTargetProcessModel
     public function addIncludeAttributes(array $attributes)
     {
         $this->includeAttributes = array_unique(array_merge($this->includeAttributes, $attributes));
-        $this->data['include'] = $this->wrapInBrackets($attributes);
+        $this->data['include'] = $this->wrapInBrackets($this->includeAttributes);
         return $this;
     }
 
     public function addExcludeAttributes(array $attributes)
     {
         $this->excludeAttributes = array_unique(array_merge($this->excludeAttributes, $attributes));
-        $this->data['exclude'] = $this->wrapInBrackets($attributes);
+        $this->data['exclude'] = $this->wrapInBrackets($this->excludeAttributes);
         return $this;
     }
 
     public function setIncludeAttributes(array $attributes)
     {
         $this->includeAttributes = $attributes;
-        $this->data['include'] = $this->wrapInBrackets($attributes);
+        $this->data['include'] = $this->wrapInBrackets($this->includeAttributes);
         return $this;
     }
 
     public function setExcludeAttributes(array $attributes)
     {
         $this->excludeAttributes = $attributes;
-        $this->data['exclude'] = $this->wrapInBrackets($attributes);
+        $this->data['exclude'] = $this->wrapInBrackets($this->excludeAttributes);
         return $this;
     }
 
