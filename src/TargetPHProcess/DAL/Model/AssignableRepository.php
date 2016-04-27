@@ -10,7 +10,7 @@ use TargetPHProcess\Models\EntityState;
 use TargetPHProcess\Models\Time;
 use TargetPHProcess\Models\User;
 
-class AssignableRepository extends AbstractTargetProcessModel
+class AssignableRepository extends TPModel
 {
     protected $model = Assignable::class;
     protected $modelEntity = 'Assignables';

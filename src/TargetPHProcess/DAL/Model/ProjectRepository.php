@@ -4,7 +4,7 @@ namespace TargetPHProcess\DAL\Model;
 
 use TargetPHProcess\Models\Project;
 
-class ProjectRepository extends AbstractTargetProcessModel
+class ProjectRepository extends TPModel
 {
     protected $model = Project::class;
     protected $modelEntity = 'Projects';

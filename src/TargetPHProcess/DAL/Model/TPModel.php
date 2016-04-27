@@ -13,7 +13,7 @@ use TargetPHProcess\Exceptions\NoModelSetException;
 use TargetPHProcess\Models\Model;
 use TargetPHProcess\SystemConfiguration\ProjectConfiguration;
 
-abstract class AbstractTargetProcessModel
+class TPModel
 {
     /** @var string */
     protected $query;
@@ -157,7 +157,7 @@ abstract class AbstractTargetProcessModel
         $this->configuration = $configuration;
     }
 
-    public function query($query)
+    public function setQuery($query)
     {
         $this->data['query'] = $query;
         $this->query = $query;

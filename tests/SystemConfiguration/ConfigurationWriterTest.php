@@ -28,4 +28,16 @@ class ConfigurationWriterTest extends \PHPUnit_Framework_TestCase
         $json = file_get_contents(vfsStream::url('/home/test/.tpconfig'));
         $this->assertEquals('[]', $json);
     }
+
+    /** @test */
+    public function writeAndReadJsonInFile()
+    {
+        $json = '[{"test": "test"}]';
+        $instance = new ConfigurationWriter();
+        $instance->writeConfig($json);
+        $this->assertTrue($this->root->hasChild('/home/test/.tpconfig'));
+        $actualJson = $instance->readConfig();
+        $this->assertJson($actualJson);
+        $this->assertEquals($json, $actualJson);
+    }
 }
