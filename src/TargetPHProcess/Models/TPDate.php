@@ -29,7 +29,7 @@ class TPDate extends DateTime
             } elseif (strpos($millisecondString, '-') !== false) {
                 $splittedString = explode('-', $millisecondString);
                 $milliseconds = (int)$splittedString[0];
-                $hourOffset = (int)$splittedString[1];
+                $hourOffset = $splittedString[1];
                 $hour = (int)substr($hourOffset, 0, 2);
                 $offsetMilliseconds = -3600 * $hour * 1000;
             } else {

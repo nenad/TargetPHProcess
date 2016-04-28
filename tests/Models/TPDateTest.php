@@ -24,6 +24,14 @@ class TPDateTest extends \PHPUnit_Framework_TestCase
         $tpdate = new TPDate('Date(1460379452000+0200)');
         $this->assertEquals('2016-04-11 14:57:32', $tpdate->format('Y-m-d H:i:s'));
     }
+    
+    /** @test */
+    public function createDateFromMillisecondsAndNegativeOffset()
+    {
+        date_default_timezone_set('GMT');
+        $tpdate = new TPDate('Date(1460379452000-0200)');
+        $this->assertEquals('2016-04-11 10:57:32', $tpdate->format('Y-m-d H:i:s'));
+    }
 
     /**
      * @test
