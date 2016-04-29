@@ -14,6 +14,7 @@ class TPDefinition extends InputDefinition
     {
         parent::__construct([]);
         $this->addArgument(new InputArgument('command', InputArgument::REQUIRED, 'The command to execute'));
-        $this->addOption(new InputOption('--version', '-V', InputOption::VALUE_NONE, 'Display this application version'));
+        $this->addOption(new InputOption('--version', '-V', InputOption::VALUE_NONE,
+            'Display this application version'));
     }
 }

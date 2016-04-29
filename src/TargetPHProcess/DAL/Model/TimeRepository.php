@@ -6,7 +6,7 @@ namespace TargetPHProcess\DAL\Model;
 
 use TargetPHProcess\Models\Time;
 
-class TimeRepository extends AbstractTargetProcessModel
+class TimeRepository extends TPModel
 {
     protected $model = Time::class;
     protected $modelEntity = 'Times';
