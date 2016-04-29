@@ -87,9 +87,12 @@ class TPModelTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function checkMappedObjectIsValid()
+    public function checkWrapperIsOkay()
     {
-        $this->assertTrue(true);
+        $this->model->includeAll();
+        $this->model->addIncludeAttributes(['Tasks' => ['Id', 'Name']]);
+
+        $this->assertEquals('[Name,Description,Times,Id,Tasks[Id,Name]]', $this->model->getData()['include']);
     }
 
 }
