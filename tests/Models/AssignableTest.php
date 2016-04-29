@@ -1,8 +1,11 @@
 <?php
 
-namespace TargetPHProcess\Models;
+namespace Tests\Models;
 
 use PHPUnit_Framework_TestCase;
+use TargetPHProcess\Models\Assignable;
+use TargetPHProcess\Models\EntityState;
+use TargetPHProcess\Models\Project;
 
 class AssignableTest extends PHPUnit_Framework_TestCase
 {

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BLL\Configuration;
+namespace Tests\BLL\Configuration;
 
 
 use JsonMapper;

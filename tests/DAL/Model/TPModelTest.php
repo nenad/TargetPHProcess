@@ -1,7 +1,7 @@
 <?php
 
 
-namespace DAL\Model;
+namespace Tests\DAL\Model;
 
 
 use anlutro\cURL\cURL;
@@ -10,12 +10,6 @@ use Mockery;
 use TargetPHProcess\BLL\Configuration\Configuration;
 use TargetPHProcess\DAL\Model\TPModel;
 use TargetPHProcess\SystemConfiguration\ProjectConfiguration;
-use Tests\DAL\Model\TestModel;
-use Tests\DAL\Model\TPTestModel;
-
-# Since the autoload doesn't load the classes found in /tests namespace, require_once is needed.
-require_once 'TPTestModel.php';
-require_once 'TestModel.php';
 
 class TPModelTest extends \PHPUnit_Framework_TestCase
 {
@@ -87,12 +81,19 @@ class TPModelTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function checkWrapperIsOkay()
+    public function checkRecursiveWrapperIsOkay()
     {
         $this->model->includeAll();
         $this->model->addIncludeAttributes(['Tasks' => ['Id', 'Name']]);
 
         $this->assertEquals('[Name,Description,Times,Id,Tasks[Id,Name]]', $this->model->getData()['include']);
+    }
+
+    /** @test */
+    public function checkWrapperIsOkay()
+    {
+        $this->model->includeAll();
+        $this->assertEquals('[Name,Description,Times,Id]', $this->model->getData()['include']);
     }
 
 }

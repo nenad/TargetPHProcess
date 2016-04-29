@@ -1,8 +1,10 @@
 <?php
 
 
-namespace TargetPHProcess\BLL\Auth;
+namespace Tests\BLL\Auth;
 
+
+use TargetPHProcess\BLL\Auth\AuthGenerator;
 
 class AuthGeneratorTest extends \PHPUnit_Framework_TestCase
 {

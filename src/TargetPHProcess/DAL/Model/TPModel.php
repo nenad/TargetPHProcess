@@ -173,14 +173,14 @@ class TPModel
 
     public function addIncludeAttributes(array $attributes)
     {
-        $this->includeAttributes = array_unique(array_merge($this->includeAttributes, $attributes));
+        $this->includeAttributes = array_merge($this->includeAttributes, $attributes);
         $this->data['include'] = $this->wrapInBrackets($this->includeAttributes);
         return $this;
     }
 
     public function addExcludeAttributes(array $attributes)
     {
-        $this->excludeAttributes = array_unique(array_merge($this->excludeAttributes, $attributes));
+        $this->excludeAttributes = array_merge($this->excludeAttributes, $attributes);
         $this->data['exclude'] = $this->wrapInBrackets($this->excludeAttributes);
         return $this;
     }
@@ -323,7 +323,7 @@ class TPModel
         $stringArray = '[';
         foreach ($attributes as $key => $attribute) {
             if (is_array($attribute)) {
-                return $stringArray . $key . $this->wrapInBrackets($attribute);
+                return $stringArray . $key . $this->wrapInBrackets($attribute) . ']';
             } else {
                 $stringArray .= "{$attribute},";
             }

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace tests\Models;
+namespace Tests\Models;
 
 
 use Exception;

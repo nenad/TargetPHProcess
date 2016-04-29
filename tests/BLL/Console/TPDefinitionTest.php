@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BLL\Console;
+namespace Tests\BLL\Console;
 
 
 use TargetPHProcess\BLL\Console\TPDefinition;

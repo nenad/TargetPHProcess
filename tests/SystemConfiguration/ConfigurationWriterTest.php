@@ -1,7 +1,7 @@
 <?php
 
 
-namespace SystemConfiguration;
+namespace Tests\SystemConfiguration;
 
 
 use org\bovigo\vfs\vfsStream;
