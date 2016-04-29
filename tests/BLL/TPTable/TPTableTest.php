@@ -46,5 +46,19 @@ class TPTableTest extends \PHPUnit_Framework_TestCase
 
         $this->table = new TPTable('Release', 'EntityState', $tickets);
         $this->assertEquals(2, count($this->table->getTicketsFromAxis('v1', 'Ready')));
+        $this->assertEquals(2, count($this->table->getTicketsFromAxis('v1', 'In Testing')));
+        $this->assertEquals(2, count($this->table->getTicketsFromAxis('v2', 'Ready')));
+        $this->assertEquals(2, count($this->table->getTicketsFromAxis('v2', 'In Testing')));
     }
+
+    /** @test */
+    public function checkEmptyAxisTableOrdering()
+    {
+        $tickets = [];
+        $tickets[] = $this->seeder->createTicket('Release', 'v1', 'EntityState', 'Ready');
+        $this->table = new TPTable('Release', 'EntityState', $tickets);
+        $this->assertEmpty($this->table->getTicketsFromAxis('v2', 'Ready'));
+    }
+
+
 }
