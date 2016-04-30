@@ -49,13 +49,26 @@ class TPTable
         }
     }
 
-    public function getTicketsFromYAxis($yAxis)
-    {
-
-    }
-
     public function getTicketsFromXAxis($xAxis)
     {
-
+        $xTickets = [];
+        foreach ($this->tickets as $ticket) {
+            if ($ticket->{$this->xAxis} === $xAxis) {
+                $xTickets[] = $ticket;
+            }
+        }
+        return $xTickets;
     }
+
+    public function getTicketsFromYAxis($yAxis)
+    {
+        $yTickets = [];
+        foreach ($this->tickets as $ticket) {
+            if ($ticket->{$this->yAxis} === $yAxis) {
+                $yTickets[] = $ticket;
+            }
+        }
+        return $yTickets;
+    }
+
 }
