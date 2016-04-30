@@ -234,6 +234,7 @@ class TPModel
 
     /**
      * @return array|object
+     * @throws BadResponseException
      * @throws NoModelSetException
      * @throws \JsonMapper_Exception
      */
