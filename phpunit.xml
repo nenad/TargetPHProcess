@@ -18,7 +18,10 @@
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
+            <directory suffix=".php">src/TargetPHProcess</directory>
+            <exclude>
+                <directory>src/TargetPHProcess/Command</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>
