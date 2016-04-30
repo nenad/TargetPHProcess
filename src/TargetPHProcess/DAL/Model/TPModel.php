@@ -18,9 +18,9 @@ class TPModel
     /** @var string */
     protected $query;
     /** @var array */
-    protected $includeAttributes;
+    protected $includeAttributes = [];
     /** @var array */
-    protected $excludeAttributes;
+    protected $excludeAttributes = [];
     /** @var string */
     protected $format = 'json';
     /** @var Model */

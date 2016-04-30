@@ -65,6 +65,11 @@ class TPModelTest extends \PHPUnit_Framework_TestCase
         $this->model->setTake(10);
         $this->assertEquals(10, $this->model->getTake());
 
+        $config = new ProjectConfiguration();
+        $this->model->setConfiguration($config);
+        $this->assertEquals($config, $this->model->getConfiguration());
+        $this->assertTrue($this->model->hasConfiguration());
+
         $this->assertEquals(TestModel::class, $this->model->getModel());
         $this->assertEquals('TestModels', $this->model->getModelEntity());
 
@@ -78,6 +83,14 @@ class TPModelTest extends \PHPUnit_Framework_TestCase
         $this->model->includeAll();
         $this->assertEquals(['Name', 'Description', 'Times', 'Id'], $this->model->getIncludeAttributes());
         $this->assertEquals('[Name,Description,Times,Id]', $this->model->getData()['include']);
+    }
+
+    /** @test */
+    public function checkExcludeKeys()
+    {
+        $this->model->addExcludeAttributes(['Description', 'Times']);
+        $this->assertEquals(['Description', 'Times'], $this->model->getExcludeAttributes());
+        $this->assertEquals('[Description,Times]', $this->model->getData()['exclude']);
     }
 
     /** @test */
