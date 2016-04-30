@@ -9,12 +9,12 @@ use TargetPHProcess\Models\Time;
 
 class TestModel extends Model
 {
-    /** @var string */
+    /** @var string|null */
     public $Name;
     
-    /** @var string */
+    /** @var string|null */
     public $Description;
     
-    /** @var Time[] */
-    public $Times;
+    /** @var TestModelArray[]|null */
+    public $TestModelArrays;
 }

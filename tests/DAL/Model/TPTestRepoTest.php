@@ -83,8 +83,8 @@ class TPTestRepoTest extends \PHPUnit_Framework_TestCase
     public function checkIncludeAllReturnsAllKeys()
     {
         $this->model->includeAll();
-        $this->assertEquals(['Name', 'Description', 'Times', 'Id'], $this->model->getIncludeAttributes());
-        $this->assertEquals('[Name,Description,Times,Id]', $this->model->getData()['include']);
+        $this->assertEquals(['Name', 'Description', 'TestModelArrays', 'Id'], $this->model->getIncludeAttributes());
+        $this->assertEquals('[Name,Description,TestModelArrays,Id]', $this->model->getData()['include']);
     }
 
     /** @test */
@@ -99,16 +99,17 @@ class TPTestRepoTest extends \PHPUnit_Framework_TestCase
     public function checkRecursiveWrapperIsOkay()
     {
         $this->model->includeAll();
-        $this->model->addIncludeAttributes(['Tasks' => ['Id', 'Name']]);
+        $this->model->addIncludeAttributes(['TestModelArrays' => ['Id', 'Name']]);
 
-        $this->assertEquals('[Name,Description,Times,Id,Tasks[Id,Name]]', $this->model->getData()['include']);
+        $this->assertEquals('[Name,Description,TestModelArrays,Id,TestModelArrays[Id,Name]]',
+            $this->model->getData()['include']);
     }
 
     /** @test */
     public function checkWrapperIsOkay()
     {
         $this->model->includeAll();
-        $this->assertEquals('[Name,Description,Times,Id]', $this->model->getData()['include']);
+        $this->assertEquals('[Name,Description,TestModelArrays,Id]', $this->model->getData()['include']);
     }
 
     /** @test */
@@ -255,7 +256,84 @@ class TPTestRepoTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function checkFindReturnsObject()
     {
-        
+        $data = '{"Id": "1"}';
+        $this->model->setId(1);
+        $expectedUrl = $this->projectConfig->tp_url . '/api/v1/TestModels/1';
+        $this->curl->shouldReceive('buildUrl')->once()->andReturn($expectedUrl);
+        $request = Mockery::mock(Request::class);
+        $response = Mockery::mock(Response::class);
+        $response->body = $data;
+        $response->statusCode = 200;
+        $this->curl->shouldReceive('newRequest')
+            ->with('GET', $expectedUrl)
+            ->andReturn($request)
+            ->once();
+        $request->shouldReceive('setHeader')
+            ->with('Authorization', "Basic {$this->projectConfig->auth}")->once();
+        $request->shouldReceive('send')->andReturn($response)->once();
+
+        $object = $this->model->find(1);
+        $this->assertInstanceOf(TestModel::class, $object);
+    }
+
+    /** @test */
+    public function checkGetAllReturnsCollection()
+    {
+        $data = '{"Items": [{"Id": "1"},{"Id": "2"}]}';
+        $expectedUrl = $this->projectConfig->tp_url . '/api/v1/TestModels';
+        $this->curl->shouldReceive('buildUrl')->once()->andReturn($expectedUrl);
+        $request = Mockery::mock(Request::class);
+        $response = Mockery::mock(Response::class);
+        $response->body = $data;
+        $response->statusCode = 200;
+        $this->curl->shouldReceive('newRequest')
+            ->with('GET', $expectedUrl)
+            ->andReturn($request)
+            ->once();
+        $request->shouldReceive('setHeader')
+            ->with('Authorization', "Basic {$this->projectConfig->auth}")->once();
+        $request->shouldReceive('send')->andReturn($response)->once();
+
+        $arrayObject = $this->model->all();
+        $this->assertInternalType('array', $arrayObject);
+        foreach ($arrayObject as $object) {
+            $this->assertInstanceOf(TestModel::class, $object);
+        }
+    }
+
+    /**
+     * @test
+     * @expectedException \TargetPHProcess\Exceptions\NoModelSetException
+     */
+    public function checkIfNotSetModelThrowsException()
+    {
+        $model = new TPModel($this->config, $this->curl, $this->mapper);
+        $model->get();
+    }
+
+    /** @test */
+    public function checkReturnedObjectHasArrayAsKey()
+    {
+        $data = '{"Id": "1", "TestModelArrays": {"Items": [{"Id":"1"}]}}';
+        $this->model->setId(1);
+        $expectedUrl = $this->projectConfig->tp_url . '/api/v1/TestModels/1';
+        $this->curl->shouldReceive('buildUrl')->once()->andReturn($expectedUrl);
+        $request = Mockery::mock(Request::class);
+        $response = Mockery::mock(Response::class);
+        $response->body = $data;
+        $response->statusCode = 200;
+        $this->curl->shouldReceive('newRequest')
+            ->with('GET', $expectedUrl)
+            ->andReturn($request)
+            ->once();
+        $request->shouldReceive('setHeader')
+            ->with('Authorization', "Basic {$this->projectConfig->auth}")->once();
+        $request->shouldReceive('send')->andReturn($response)->once();
+
+        /** @var TestModel $object */
+        $object = $this->model->find(1);
+        $this->assertInstanceOf(TestModel::class, $object);
+        $this->assertNotEmpty($object->TestModelArrays);
     }
 
 }
